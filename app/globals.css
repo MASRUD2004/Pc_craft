@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
+/* 1. Tell Tailwind to scan your components folder */
+@source "../components/**/*.{ts,tsx}";
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 2. Change these to dark values so your site looks 'Snow/Obsidian' immediately */
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 @theme inline {
@@ -12,15 +16,17 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* Optional: Override the system preference to keep it dark */
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #000000;
+    --foreground: #ffffff;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Use the Geist font variables you have in layout.tsx */
+  font-family: var(--font-sans), Arial, sans-serif;
 }
