@@ -15,7 +15,7 @@ export default function Header() {
 
         {/* NAVIGATION */}
         <nav className="hidden md:flex items-center gap-10">
-          <Link href="/builder" className="text-sm font-medium text-zinc-400 hover:text-purple-400 transition-colors">
+          <Link href="/build" className="text-sm font-medium text-zinc-400 hover:text-purple-400 transition-colors">
             Builder
           </Link>
           <Link href="/builds" className="text-sm font-medium text-zinc-400 hover:text-purple-400 transition-colors">
@@ -31,11 +31,6 @@ export default function Header() {
           <button className="hidden sm:block text-sm font-semibold text-zinc-400 hover:text-white transition">
             Sign In
           </button>
-          <Link href="/builder">
-            <button className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-bold hover:bg-purple-500 hover:text-white transition-all duration-300 shadow-lg shadow-white/5">
-              Start Building
-            </button>
-          </Link>
         </div>
 
       </div>

@@ -2,22 +2,38 @@ import Link from "next/link";
 
 export default function Home() {
   const builds = [
-    { name: "Budget Gaming PC", price: "$600", desc: "Perfect for entry level 1080p gaming." },
-    { name: "Mid Range Gaming PC", price: "$1000", desc: "Smooth 1440p gaming and productivity." },
-    { name: "High Performance PC", price: "$1500", desc: "High refresh gaming and streaming." },
-    { name: "Enthusiast PC", price: "$2200", desc: "Extreme performance and future proof." },
-    { name: "Ultimate Workstation", price: "$3500", desc: "For creators, engineers and developers." },
+    {
+      name: "Budget Gaming PC",
+      price: "$600",
+      desc: "Perfect for entry level 1080p gaming.",
+    },
+    {
+      name: "Mid Range Gaming PC",
+      price: "$1000",
+      desc: "Smooth 1440p gaming and productivity.",
+    },
+    {
+      name: "High Performance PC",
+      price: "$1500",
+      desc: "High refresh gaming and streaming.",
+    },
+    {
+      name: "Enthusiast PC",
+      price: "$2200",
+      desc: "Extreme performance and future proof.",
+    },
+    {
+      name: "Ultimate Workstation",
+      price: "$3500",
+      desc: "For creators, engineers and developers.",
+    },
   ];
 
   return (
     <div className="bg-black text-white min-h-screen">
-
       {/* HERO SECTION */}
       <section className="flex flex-col items-center justify-center text-center py-28 px-6">
-
-        <h1 className="text-5xl font-bold mb-6">
-          Build Your Dream PC
-        </h1>
+        <h1 className="text-5xl font-bold mb-6">Build Your Dream PC</h1>
 
         <p className="max-w-xl text-gray-300 mb-10">
           Explore powerful PC builds, compare components, check benchmarks and
@@ -43,13 +59,11 @@ export default function Home() {
 
       {/* BUILDS SECTION */}
       <section className="max-w-6xl mx-auto px-6 py-16">
-
         <h2 className="text-3xl font-bold mb-10 text-center">
           Recommended PC Builds
         </h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
           {builds.map((build, index) => (
             <div
               key={index}
@@ -68,10 +82,8 @@ export default function Home() {
               </Link>
             </div>
           ))}
-
         </div>
       </section>
-
     </div>
   );
 }
