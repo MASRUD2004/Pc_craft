@@ -1,3 +1,5 @@
+// app/motherboard/page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,31 +8,86 @@ import LoadingSpinner from "../loadingSpinner";
 
 export default function MotherboardPage() {
   const [moboData, setMoboData] = useState([]);
+  const [cpuData, setCpuData] = useState([]); // 🔥 ADD THIS
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/motherboard.json")
-      .then((res) => res.json())
-      .then((data) => {
-        setMoboData(data);
+    // 🔥 LOAD BOTH DATASETS
+    Promise.all([
+      fetch("/motherboard.json").then((res) => res.json()),
+      fetch("/cpu.json").then((res) => res.json()),
+    ])
+      .then(([motherboardJson, cpuJson]) => {
+        setMoboData(motherboardJson);
+
+        // 🔥 SAVE CPU DATA
+        setCpuData(cpuJson);
+
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading motherboard.json:", err);
+        console.error("Error loading data:", err);
         setLoading(false);
       });
   }, []);
 
+  // =========================================================
+  // FILTER CONFIGS
+  // =========================================================
   const moboFilterConfigs = [
-    { label: "Manufacturer", key: "spec1", type: "category" },  // ASUS, MSI, Gigabyte
-    { label: "Socket & Chipset", key: "spec2", type: "category" }, // AM5 B650, LGA1700 Z790
-    { label: "Price ($)", key: "price", type: "number" },
-    { label: "Form Factor", key: "formFactor", type: "category" }, // ATX, Micro-ATX, Mini-ITX
-    { label: "Color Theme", key: "color", type: "category" },      // Black, White/Silver
-    { label: "Seller Platform", key: "seller", type: "category" }
+    {
+      label: "Manufacturer",
+      key: "spec1",
+      type: "category",
+    },
+
+    {
+      label: "Socket & Chipset",
+      key: "spec2",
+      type: "category",
+    },
+
+    {
+      label: "Price ($)",
+      key: "price",
+      type: "number",
+    },
+
+    {
+      label: "Form Factor",
+      key: "formFactor",
+      type: "category",
+    },
+
+    {
+      label: "Color Theme",
+      key: "color",
+      type: "category",
+    },
+
+    {
+      label: "Seller Platform",
+      key: "seller",
+      type: "category",
+    },
   ];
 
-  if (loading) return <LoadingSpinner item="motherboards" />;
+  if (loading) {
+    return <LoadingSpinner item="motherboards" />;
+  }
 
-  return <PartPickerLayout title="Motherboard" data={moboData} paramKey="motherboard" filterConfigs={moboFilterConfigs} />;
+  // =========================================================
+  // PAGE
+  // =========================================================
+  return (
+    <PartPickerLayout
+      title="Motherboard"
+      data={moboData}
+      paramKey="motherboard"
+      filterConfigs={moboFilterConfigs}
+
+      // 🔥 CRITICAL FIX
+      allCpuData={cpuData}
+    />
+  );
 }

@@ -1,3 +1,5 @@
+// app/ram/page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,13 +8,21 @@ import LoadingSpinner from "../loadingSpinner";
 
 export default function RamPage() {
   const [ramData, setRamData] = useState([]);
+  const [cpuData, setCpuData] = useState([]); // 🔥 ADD THIS
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/ram.json")
-      .then((res) => res.json())
-      .then((data) => {
-        setRamData(data);
+    // 🔥 LOAD BOTH RAM + CPU DATA
+    Promise.all([
+      fetch("/ram.json").then((res) => res.json()),
+      fetch("/cpu.json").then((res) => res.json()),
+    ])
+      .then(([ramJson, cpuJson]) => {
+        setRamData(ramJson);
+
+        // 🔥 SAVE CPU DATA
+        setCpuData(cpuJson);
+
         setLoading(false);
       })
       .catch((err) => {
@@ -21,24 +31,66 @@ export default function RamPage() {
       });
   }, []);
 
+  // =========================================================
+  // FILTER CONFIGS
+  // =========================================================
   const ramFilterConfigs = [
-    { label: "Brand", key: "spec1", type: "category" },        // G.Skill, Corsair, TeamGroup
-    { label: "Memory Type", key: "spec2", type: "category" },  // DDR4, DDR5
-    { label: "Price ($)", key: "price", type: "number" },
-    { label: "Total Capacity (GB)", key: "capacity", type: "number" }, // 16, 32, 64
-    { label: "Speed (MHz)", key: "speed", type: "number" },     // 3600, 5600, 6000
-    { label: "Color", key: "color", type: "category" }
+    {
+      label: "Brand",
+      key: "spec1",
+      type: "category",
+    },
+
+    {
+      label: "Memory Type",
+      key: "spec2",
+      type: "category",
+    },
+
+    {
+      label: "Price ($)",
+      key: "price",
+      type: "number",
+    },
+
+    {
+      label: "Total Capacity (GB)",
+      key: "capacity",
+      type: "number",
+    },
+
+    {
+      label: "Speed (MHz)",
+      key: "speed",
+      type: "number",
+    },
+
+    {
+      label: "Color",
+      key: "color",
+      type: "category",
+    },
   ];
 
-  if (loading) return <LoadingSpinner item="RAM modules" />;
+  if (loading) {
+    return <LoadingSpinner item="RAM modules" />;
+  }
 
-  // CRITICAL FIX: Changed paramKey from "ram" to "memory"
+  // =========================================================
+  // PAGE
+  // =========================================================
   return (
-    <PartPickerLayout 
-      title="Memory (RAM)" 
-      data={ramData} 
-      paramKey="memory" 
-      filterConfigs={ramFilterConfigs} 
+    <PartPickerLayout
+      title="Memory (RAM)"
+      data={ramData}
+
+      // 🔥 IMPORTANT FIX
+      paramKey="ram"
+
+      filterConfigs={ramFilterConfigs}
+
+      // 🔥 CRITICAL FIX
+      allCpuData={cpuData}
     />
   );
 }
