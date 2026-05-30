@@ -108,6 +108,12 @@ function BuildPageContent() {
     Object.values(coreBuild).some((p) => p.selected) ||
     Object.values(peripherals).some((p) => p.selected);
 
+  const gpuLength = Number(searchParams.get("gpu_length")) || 0;
+  const caseMaxGpuLength = Number(searchParams.get("case_max_gpu_length")) || 0;
+
+  const gpuFits =
+    gpuLength > 0 && caseMaxGpuLength > 0 && gpuLength <= caseMaxGpuLength;
+
   useEffect(() => {
     let activeParams = new URLSearchParams(searchParams.toString());
     const hasUrlParams = Array.from(activeParams.keys()).some((k) =>
@@ -275,6 +281,13 @@ function BuildPageContent() {
     } else {
       localStorage.setItem("pc_craft_build_backups", params.toString());
     }
+    if (componentKey === "gpu") {
+      params.delete("gpu_length");
+    }
+
+    if (componentKey === "case") {
+      params.delete("case_max_gpu_length");
+    }
 
     router.push(`?${params.toString()}`);
   };
@@ -304,6 +317,13 @@ function BuildPageContent() {
     }
     if (componentKey === "ram") {
       params.delete("ram_type");
+    }
+    if (componentKey === "gpu") {
+      params.delete("gpu_length");
+    }
+
+    if (componentKey === "case") {
+      params.delete("case_max_gpu_length");
     }
 
     // Save cleaned state to localStorage so it persists across navigation
@@ -481,7 +501,11 @@ function BuildPageContent() {
                       routePath: "/components/os",
                     },
                   });
-                  router.push("?");
+                  localStorage.removeItem("pc_craft_build_backups");
+
+                  const params = new URLSearchParams();
+
+                  router.push(`?${params.toString()}`);
                 }}
                 className="text-xs font-semibold text-red-400 border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 px-3 py-2 rounded-lg transition"
               >
@@ -494,6 +518,30 @@ function BuildPageContent() {
             </div>
           </div>
         </div>
+
+        {gpuLength > 0 && caseMaxGpuLength > 0 && (
+          <div
+            className={`p-4 rounded-xl border ${
+              gpuFits
+                ? "border-green-600 bg-green-950/30"
+                : "border-red-600 bg-red-950/30"
+            }`}
+          >
+            {gpuFits ? (
+              <p className="text-green-400 font-semibold">
+                ✓ GPU Clearance Compatible
+              </p>
+            ) : (
+              <p className="text-red-400 font-semibold">
+                ✕ GPU Too Long For Selected Case
+              </p>
+            )}
+
+            <p className="text-sm text-zinc-400 mt-1">
+              GPU Length: {gpuLength} mm | Case Clearance: {caseMaxGpuLength} mm
+            </p>
+          </div>
+        )}
 
         {/* CORE HARDWARE BUILD SECTION */}
         <div className="space-y-4">
