@@ -10,99 +10,39 @@ interface Part {
   routePath: string;
 }
 
+// =========================================================
+// CONSTANTS — defined once, reused everywhere
+// =========================================================
+const INITIAL_CORE_BUILD: Record<string, Part> = {
+  cpu:         { name: "CPU",                 selected: null, price: null, routePath: "/components/cpu" },
+  cooler:      { name: "CPU Cooler",          selected: null, price: null, routePath: "/components/cpu_cooler" },
+  motherboard: { name: "Motherboard",         selected: null, price: null, routePath: "/components/motherboard" },
+  ram:         { name: "Memory (RAM)",        selected: null, price: null, routePath: "/components/ram" },
+  storage:     { name: "Storage (SSD/HDD)",   selected: null, price: null, routePath: "/components/storage" },
+  gpu:         { name: "Graphics Card (GPU)", selected: null, price: null, routePath: "/components/gpu" },
+  case:        { name: "PC Case",             selected: null, price: null, routePath: "/components/pc_case" },
+  psu:         { name: "Power Supply (PSU)",  selected: null, price: null, routePath: "/components/powersupply" },
+};
+
+const INITIAL_PERIPHERALS: Record<string, Part> = {
+  caseFans: { name: "Case Fans",          selected: null, price: null, routePath: "/components/case_fans" },
+  monitor:  { name: "Monitor",            selected: null, price: null, routePath: "/components/monitor" },
+  keyboard: { name: "Keyboard",           selected: null, price: null, routePath: "/components/keyboard" },
+  mouse:    { name: "Mouse",              selected: null, price: null, routePath: "/components/mouse" },
+  headset:  { name: "Headset / Speakers", selected: null, price: null, routePath: "/components/audio" },
+  os:       { name: "Operating System",   selected: null, price: null, routePath: "/components/os" },
+};
+
+// Deep-clone so mutations never affect the originals
+const cloneCoreBuild = () => JSON.parse(JSON.stringify(INITIAL_CORE_BUILD));
+const clonePeripherals = () => JSON.parse(JSON.stringify(INITIAL_PERIPHERALS));
+
 function BuildPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [coreBuild, setCoreBuild] = useState<Record<string, Part>>({
-    cpu: {
-      name: "CPU",
-      selected: null,
-      price: null,
-      routePath: "/components/cpu",
-    },
-    cooler: {
-      name: "CPU Cooler",
-      selected: null,
-      price: null,
-      routePath: "/components/cpu_cooler",
-    },
-    motherboard: {
-      name: "Motherboard",
-      selected: null,
-      price: null,
-      routePath: "/components/motherboard",
-    },
-    ram: {
-      name: "Memory (RAM)",
-      selected: null,
-      price: null,
-      routePath: "/components/ram",
-    },
-    storage: {
-      name: "Storage (SSD/HDD)",
-      selected: null,
-      price: null,
-      routePath: "/components/storage",
-    },
-    gpu: {
-      name: "Graphics Card (GPU)",
-      selected: null,
-      price: null,
-      routePath: "/components/gpu",
-    },
-    case: {
-      name: "PC Case",
-      selected: null,
-      price: null,
-      routePath: "/components/pc_case",
-    },
-    psu: {
-      name: "Power Supply (PSU)",
-      selected: null,
-      price: null,
-      routePath: "/components/powersupply",
-    },
-  });
-
-  const [peripherals, setPeripherals] = useState<Record<string, Part>>({
-    caseFans: {
-      name: "Case Fans",
-      selected: null,
-      price: null,
-      routePath: "/components/case_fans",
-    },
-    monitor: {
-      name: "Monitor",
-      selected: null,
-      price: null,
-      routePath: "/components/monitor",
-    },
-    keyboard: {
-      name: "Keyboard",
-      selected: null,
-      price: null,
-      routePath: "/components/keyboard",
-    },
-    mouse: {
-      name: "Mouse",
-      selected: null,
-      price: null,
-      routePath: "/components/mouse",
-    },
-    headset: {
-      name: "Headset / Speakers",
-      selected: null,
-      price: null,
-      routePath: "/components/audio",
-    },
-    os: {
-      name: "Operating System",
-      selected: null,
-      price: null,
-      routePath: "/components/os",
-    },
-  });
+  const [coreBuild, setCoreBuild] = useState<Record<string, Part>>(cloneCoreBuild);
+  const [peripherals, setPeripherals] = useState<Record<string, Part>>(clonePeripherals);
 
   const hasSelectedParts =
     Object.values(coreBuild).some((p) => p.selected) ||
@@ -110,9 +50,7 @@ function BuildPageContent() {
 
   const gpuLength = Number(searchParams.get("gpu_length")) || 0;
   const caseMaxGpuLength = Number(searchParams.get("case_max_gpu_length")) || 0;
-
-  const gpuFits =
-    gpuLength > 0 && caseMaxGpuLength > 0 && gpuLength <= caseMaxGpuLength;
+  const gpuFits = gpuLength > 0 && caseMaxGpuLength > 0 && gpuLength <= caseMaxGpuLength;
 
   useEffect(() => {
     let activeParams = new URLSearchParams(searchParams.toString());
@@ -132,95 +70,9 @@ function BuildPageContent() {
       }
     }
 
-    const baselineCore = {
-      cpu: {
-        name: "CPU",
-        selected: null,
-        price: null,
-        routePath: "/components/cpu",
-      },
-      cooler: {
-        name: "CPU Cooler",
-        selected: null,
-        price: null,
-        routePath: "/components/cpu_cooler",
-      },
-      motherboard: {
-        name: "Motherboard",
-        selected: null,
-        price: null,
-        routePath: "/components/motherboard",
-      },
-      ram: {
-        name: "Memory (RAM)",
-        selected: null,
-        price: null,
-        routePath: "/components/ram",
-      },
-      storage: {
-        name: "Storage (SSD/HDD)",
-        selected: null,
-        price: null,
-        routePath: "/components/storage",
-      },
-      gpu: {
-        name: "Graphics Card (GPU)",
-        selected: null,
-        price: null,
-        routePath: "/components/gpu",
-      },
-      case: {
-        name: "PC Case",
-        selected: null,
-        price: null,
-        routePath: "/components/pc_case",
-      },
-      psu: {
-        name: "Power Supply (PSU)",
-        selected: null,
-        price: null,
-        routePath: "/components/powersupply",
-      },
-    };
-
-    const baselinePeripherals = {
-      caseFans: {
-        name: "Case Fans",
-        selected: null,
-        price: null,
-        routePath: "/components/case_fans",
-      },
-      monitor: {
-        name: "Monitor",
-        selected: null,
-        price: null,
-        routePath: "/components/monitor",
-      },
-      keyboard: {
-        name: "Keyboard",
-        selected: null,
-        price: null,
-        routePath: "/components/keyboard",
-      },
-      mouse: {
-        name: "Mouse",
-        selected: null,
-        price: null,
-        routePath: "/components/mouse",
-      },
-      headset: {
-        name: "Headset / Speakers",
-        selected: null,
-        price: null,
-        routePath: "/components/audio",
-      },
-      os: {
-        name: "Operating System",
-        selected: null,
-        price: null,
-        routePath: "/components/os",
-      },
-    };
+    // Start from clean clones — never mutate the originals
+    const baselineCore = cloneCoreBuild();
+    const baselinePeripherals = clonePeripherals();
 
     activeParams.forEach((value, key) => {
       if (key.endsWith("_name")) {
@@ -245,11 +97,7 @@ function BuildPageContent() {
   }, [searchParams, router]);
 
   const calculateTotal = () => {
-    const combinedParts = [
-      ...Object.values(coreBuild),
-      ...Object.values(peripherals),
-    ];
-    return combinedParts
+    return [...Object.values(coreBuild), ...Object.values(peripherals)]
       .reduce((acc, part) => {
         return acc + (part.price ? parseFloat(part.price.replace("$", "")) : 0);
       }, 0)
@@ -272,6 +120,8 @@ function BuildPageContent() {
       params.delete("cpu_id");
     }
     if (componentKey === "ram") params.delete("ram_type");
+    if (componentKey === "gpu") params.delete("gpu_length");
+    if (componentKey === "case") params.delete("case_max_gpu_length");
 
     const remainingParams = Array.from(params.keys()).some((k) =>
       k.endsWith("_name"),
@@ -280,13 +130,6 @@ function BuildPageContent() {
       localStorage.removeItem("pc_craft_build_backups");
     } else {
       localStorage.setItem("pc_craft_build_backups", params.toString());
-    }
-    if (componentKey === "gpu") {
-      params.delete("gpu_length");
-    }
-
-    if (componentKey === "case") {
-      params.delete("case_max_gpu_length");
     }
 
     router.push(`?${params.toString()}`);
@@ -300,13 +143,11 @@ function BuildPageContent() {
   const handleReselect = (componentKey: string, routePath: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    // Remove only this component's data so the picker starts fresh for it
     params.delete(`${componentKey}_name`);
     params.delete(`${componentKey}_price`);
     params.delete(`${componentKey}_socket`);
     params.delete(`${componentKey}_ram_type`);
 
-    // Also clear cross-link sync keys for compatibility matrix to reset properly
     if (componentKey === "motherboard") {
       params.delete("motherboard_socket");
       params.delete("motherboard_ram_type");
@@ -315,22 +156,19 @@ function BuildPageContent() {
       params.delete("cpu_socket");
       params.delete("cpu_id");
     }
-    if (componentKey === "ram") {
-      params.delete("ram_type");
-    }
-    if (componentKey === "gpu") {
-      params.delete("gpu_length");
-    }
+    if (componentKey === "ram") params.delete("ram_type");
+    if (componentKey === "gpu") params.delete("gpu_length");
+    if (componentKey === "case") params.delete("case_max_gpu_length");
 
-    if (componentKey === "case") {
-      params.delete("case_max_gpu_length");
-    }
-
-    // Save cleaned state to localStorage so it persists across navigation
     localStorage.setItem("pc_craft_build_backups", params.toString());
-
-    // Navigate to part picker with remaining params intact
     router.push(`${routePath}?${params.toString()}`);
+  };
+
+  const handleClearBuild = () => {
+    localStorage.removeItem("pc_craft_build_backups");
+    setCoreBuild(cloneCoreBuild());
+    setPeripherals(clonePeripherals());
+    router.push("?");
   };
 
   const renderTableRows = (partList: Record<string, Part>) => {
@@ -411,102 +249,7 @@ function BuildPageContent() {
           <div className="flex items-center gap-6">
             {hasSelectedParts && (
               <button
-                onClick={() => {
-                  localStorage.removeItem("pc_craft_build_backups");
-                  setCoreBuild({
-                    cpu: {
-                      name: "CPU",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/cpu",
-                    },
-                    cooler: {
-                      name: "CPU Cooler",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/cpu_cooler",
-                    },
-                    motherboard: {
-                      name: "Motherboard",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/motherboard",
-                    },
-                    ram: {
-                      name: "Memory (RAM)",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/ram",
-                    },
-                    storage: {
-                      name: "Storage (SSD/HDD)",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/storage",
-                    },
-                    gpu: {
-                      name: "Graphics Card (GPU)",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/gpu",
-                    },
-                    case: {
-                      name: "PC Case",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/pc_case",
-                    },
-                    psu: {
-                      name: "Power Supply (PSU)",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/powersupply",
-                    },
-                  });
-                  setPeripherals({
-                    caseFans: {
-                      name: "Case Fans",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/case_fans",
-                    },
-                    monitor: {
-                      name: "Monitor",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/monitor",
-                    },
-                    keyboard: {
-                      name: "Keyboard",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/keyboard",
-                    },
-                    mouse: {
-                      name: "Mouse",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/mouse",
-                    },
-                    headset: {
-                      name: "Headset / Speakers",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/audio",
-                    },
-                    os: {
-                      name: "Operating System",
-                      selected: null,
-                      price: null,
-                      routePath: "/components/os",
-                    },
-                  });
-                  localStorage.removeItem("pc_craft_build_backups");
-
-                  const params = new URLSearchParams();
-
-                  router.push(`?${params.toString()}`);
-                }}
+                onClick={handleClearBuild}
                 className="text-xs font-semibold text-red-400 border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 px-3 py-2 rounded-lg transition"
               >
                 Clear Build
@@ -536,7 +279,6 @@ function BuildPageContent() {
                 ✕ GPU Too Long For Selected Case
               </p>
             )}
-
             <p className="text-sm text-zinc-400 mt-1">
               GPU Length: {gpuLength} mm | Case Clearance: {caseMaxGpuLength} mm
             </p>
@@ -558,9 +300,7 @@ function BuildPageContent() {
                   <th className="p-4 font-semibold w-1/4">Component</th>
                   <th className="p-4 font-semibold w-1/2">Selection</th>
                   <th className="p-4 font-semibold text-right w-1/6">Price</th>
-                  <th className="p-4 font-semibold text-center w-1/6">
-                    Actions
-                  </th>
+                  <th className="p-4 font-semibold text-center w-1/6">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60">
@@ -585,9 +325,7 @@ function BuildPageContent() {
                   <th className="p-4 font-semibold w-1/4">Component</th>
                   <th className="p-4 font-semibold w-1/2">Selection</th>
                   <th className="p-4 font-semibold text-right w-1/6">Price</th>
-                  <th className="p-4 font-semibold text-center w-1/6">
-                    Actions
-                  </th>
+                  <th className="p-4 font-semibold text-center w-1/6">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60">

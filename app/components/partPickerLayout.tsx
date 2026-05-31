@@ -23,7 +23,7 @@ interface Item {
 
   supported_ram?: string[];
 
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface FilterConfig {
