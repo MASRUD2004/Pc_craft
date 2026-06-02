@@ -37,13 +37,13 @@ export default function RamPage() {
   const ramFilterConfigs = [
     {
       label: "Brand",
-      key: "spec1",
+      key: "manufacturer",
       type: "category",
     },
 
     {
       label: "Memory Type",
-      key: "spec2",
+      key: "type",
       type: "category",
     },
 
@@ -54,15 +54,15 @@ export default function RamPage() {
     },
 
     {
-      label: "Total Capacity (GB)",
+      label: "Total Capacity",
       key: "capacity",
-      type: "number",
+      type: "category",
     },
 
     {
-      label: "Speed (MHz)",
+      label: "Speed",
       key: "speed",
-      type: "number",
+      type: "category",
     },
 
     {

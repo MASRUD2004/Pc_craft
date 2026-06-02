@@ -22,15 +22,22 @@ export default function PcCasePage() {
   }, []);
 
   const caseFilterConfigs = [
-    { label: "Brand", key: "spec1", type: "category" },        // LIAN LI, NZXT, Montech
-    { label: "Form Factor Support", key: "spec2", type: "category" }, // ATX Mid Tower, Mini-ITX
+    { label: "Manufacturer", key: "manufacturer", type: "category" },
+    { label: "Form Factor", key: "form_factor", type: "category" },
+    { label: "Color", key: "color", type: "category" },
+    { label: "Side Panel", key: "side_panel", type: "category" },
+    { label: "Max GPU Length (mm)", key: "max_gpu_length", type: "number" },
     { label: "Price ($)", key: "price", type: "number" },
-    { label: "Color Theme", key: "color", type: "category" },  // Black, White, Snow White
-    { label: "Max GPU Length (mm)", key: "gpuLengthMax", type: "number" },
-    { label: "Seller Platform", key: "seller", type: "category" }
   ];
 
   if (loading) return <LoadingSpinner item="PC cases" />;
 
-  return <PartPickerLayout title="Computer Case" data={caseData} paramKey="case" filterConfigs={caseFilterConfigs} />;
+  return (
+    <PartPickerLayout
+      title="Computer Case"
+      data={caseData}
+      paramKey="case"
+      filterConfigs={caseFilterConfigs}
+    />
+  );
 }

@@ -1,5 +1,3 @@
-// app/motherboard/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,87 +5,39 @@ import PartPickerLayout from "../partPickerLayout";
 import LoadingSpinner from "../loadingSpinner";
 
 export default function MotherboardPage() {
-  const [moboData, setMoboData] = useState([]);
-  const [cpuData, setCpuData] = useState([]); // 🔥 ADD THIS
+  const [mbData, setMbData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 🔥 LOAD BOTH DATASETS
-    Promise.all([
-      fetch("/motherboard.json").then((res) => res.json()),
-      fetch("/cpu.json").then((res) => res.json()),
-    ])
-      .then(([motherboardJson, cpuJson]) => {
-        setMoboData(motherboardJson);
-
-        // 🔥 SAVE CPU DATA
-        setCpuData(cpuJson);
-
+    fetch("/motherboard.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setMbData(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading data:", err);
+        console.error("Error loading motherboard.json:", err);
         setLoading(false);
       });
   }, []);
 
-  // =========================================================
-  // FILTER CONFIGS
-  // =========================================================
-  const moboFilterConfigs = [
-    {
-      label: "Manufacturer",
-      key: "spec1",
-      type: "category",
-    },
-
-    {
-      label: "Socket & Chipset",
-      key: "spec2",
-      type: "category",
-    },
-
-    {
-      label: "Price ($)",
-      key: "price",
-      type: "number",
-    },
-
-    {
-      label: "Form Factor",
-      key: "formFactor",
-      type: "category",
-    },
-
-    {
-      label: "Color Theme",
-      key: "color",
-      type: "category",
-    },
-
-    {
-      label: "Seller Platform",
-      key: "seller",
-      type: "category",
-    },
+  const mbFilterConfigs = [
+    { label: "Manufacturer", key: "manufacturer", type: "category" },
+    { label: "Socket", key: "socket", type: "category" },
+    { label: "Chipset", key: "chipset", type: "category" },
+    { label: "Form Factor", key: "form_factor", type: "category" },
+    { label: "RAM Type", key: "ram_type", type: "category" },
+    { label: "Price ($)", key: "price", type: "number" },
   ];
 
-  if (loading) {
-    return <LoadingSpinner item="motherboards" />;
-  }
+  if (loading) return <LoadingSpinner item="motherboards" />;
 
-  // =========================================================
-  // PAGE
-  // =========================================================
   return (
     <PartPickerLayout
       title="Motherboard"
-      data={moboData}
+      data={mbData}
       paramKey="motherboard"
-      filterConfigs={moboFilterConfigs}
-
-      // 🔥 CRITICAL FIX
-      allCpuData={cpuData}
+      filterConfigs={mbFilterConfigs}
     />
   );
 }
